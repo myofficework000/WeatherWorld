@@ -2,8 +2,8 @@ package com.example.mvvmcompose.di
 
 import com.example.weather_world.model.remote.ApiService
 import com.example.weather_world.model.remote.Constants.BASE_URL
-import com.example.mvvmcompose.model.repositories.Repository
-import com.example.mvvmcompose.model.repositories.RepositoryImplementation
+import com.example.weather_world.model.repositories.Repository
+import com.example.weather_world.model.repositories.RepositoryImplementation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
