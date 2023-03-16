@@ -48,7 +48,8 @@ class MainActivity : ComponentActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     var lat: Double? = null
     var lon: Double? = null
-    private lateinit var latestLocation: Location
+    private var latestLocation by mutableStateOf(Location(""))
+
     private val locationPermissionCode = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,9 +63,7 @@ class MainActivity : ComponentActivity(), LocationListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (this::latestLocation.isInitialized) {
-                        AirPollution(location = latestLocation)
-                    }
+                    AirPollution(location = latestLocation)
                 }
             }
         }
@@ -100,6 +99,7 @@ class MainActivity : ComponentActivity(), LocationListener {
         latestLocation = location
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
