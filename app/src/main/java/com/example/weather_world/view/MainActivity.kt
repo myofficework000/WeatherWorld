@@ -14,7 +14,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     var lat: Double? = null
     var lon: Double? = null
-    private lateinit var latestLocation: Location
+    private var latestLocation by mutableStateOf(Location(""))
+
     private val locationPermissionCode = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +41,7 @@ class MainActivity : ComponentActivity(), LocationListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (this::latestLocation.isInitialized) {
-                        AirPollution(location = latestLocation)
-                    }
+                    AirPollution(location = latestLocation)
                 }
             }
         }
@@ -78,6 +77,7 @@ class MainActivity : ComponentActivity(), LocationListener {
         latestLocation = location
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
