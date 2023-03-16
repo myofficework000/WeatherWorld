@@ -8,18 +8,39 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.weather_world.model.remote.data.TemperatureUnit
 import com.example.weather_world.view.ui.theme.WeatherWorldTheme
+import com.example.weatherappall.model.remote.data.forecast.Weather
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +53,7 @@ class MainActivity : ComponentActivity(), LocationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        transparentStatusBar(window)
         getCurrentLocation()
         setContent {
             WeatherWorldTheme {
@@ -100,4 +122,90 @@ fun DefaultPreview() {
     WeatherWorldTheme {
         // AirPollution()
     }
+}
+
+@Composable
+fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
+
+    val (cur, setCur) = remember { mutableStateOf(weatherIcon) }
+    var trigger by remember { mutableStateOf(0f) }
+
+    DisposableEffect(weatherIcon.icon) {
+        trigger = 1f
+        onDispose { }
+    }
+
+    val animateFloat by animateFloatAsState(
+        targetValue = trigger,
+        animationSpec = tween(1000)
+    ) {
+        setCur(weatherIcon)
+        trigger = 0f
+    }
+
+    /* val composeInfo = remember(animateFloat) {
+        cur.composedIcon + (weatherIcon.composedIcon - cur.composedIcon) * animateFloat
+         cur.icon animateFloat
+
+     }
+
+     ComposedIcon(
+         modifier,
+         composeInfo
+     )*/
+}
+
+@Composable
+private fun backgroundColorState(target: Color) =
+    animateColorAsState(
+        targetValue = target,
+        animationSpec = spring(stiffness = Spring.StiffnessLow)
+    )
+
+/**
+ * transparent ActionBar with more-opt menu
+ */
+@Composable
+fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
+    Box(
+        Modifier
+            .height(100.dp)
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
+                )
+            )
+            .clearAndSetSemantics { }
+    ) {
+        var showDialogState by remember { mutableStateOf(false) }
+
+        if (showDialogState) {
+            ShowDialog(selected) {
+                onSelect(it)
+                showDialogState = false
+            }
+        }
+
+        Image(
+            Icons.Default.MoreVert,
+            "",
+            Modifier
+                .size(50.dp)
+                .offset((-2).dp, 30.dp)
+                .clickable { showDialogState = true }
+                .padding(10.dp)
+                .align(Alignment.TopEnd),
+            colorFilter = ColorFilter.tint(Color.White)
+        )
+    }
+}
+
+private fun transparentStatusBar(window: Window) {
+    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+    val option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    val vis = window.decorView.systemUiVisibility
+    window.decorView.systemUiVisibility = option or vis
+    window.statusBarColor = android.graphics.Color.TRANSPARENT
 }

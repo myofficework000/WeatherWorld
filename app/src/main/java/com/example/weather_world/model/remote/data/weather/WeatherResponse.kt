@@ -1,5 +1,7 @@
 package com.example.weatherappall.model.remote.data.weather
 
+import com.example.weather_world.model.remote.data.weather.Weather
+
 data class WeatherResponse(
     val base: String,
     val clouds: Clouds,
