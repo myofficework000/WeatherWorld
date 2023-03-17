@@ -16,6 +16,7 @@ class NewsViewModel @Inject constructor(private val repository: Repository) : Vi
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     val responseFromApi = MutableLiveData<NewsResponse>()
 
+
     fun getNewsAccordingToRegion(country: String) {
         compositeDisposable.add(
             repository.fetchNewsAPI("CN")
