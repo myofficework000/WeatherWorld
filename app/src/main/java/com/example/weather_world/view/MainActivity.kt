@@ -38,8 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.TemperatureUnit
 import com.example.weather_world.view.ui.theme.WeatherWorldTheme
+import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.Weather
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -57,6 +59,12 @@ class MainActivity : ComponentActivity(), LocationListener {
         transparentStatusBar(window)
         getCurrentLocation()
         setContent {
+            val weatherViewModel = hiltViewModel<WeatherViewModel>()
+
+            LaunchedEffect(latestLocation) {
+                weatherViewModel.getAirPollutionInfo(latestLocation)
+            }
+
             WeatherWorldTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -64,10 +72,9 @@ class MainActivity : ComponentActivity(), LocationListener {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column() {
-                        AirPollution(location = latestLocation)
+                        AirPollution(weatherViewModel.currentAirPollutionData)
                         Forecast()
                     }
-
                 }
             }
         }
@@ -93,7 +100,6 @@ class MainActivity : ComponentActivity(), LocationListener {
                 this
             )
         }
-
     }
 
     @SuppressLint("SetTextI18n")
