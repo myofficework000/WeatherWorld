@@ -1,6 +1,9 @@
 package com.example.weather_world.di
 
+import com.example.weather_world.model.remote.services.ApiServiceNews
 import com.example.weather_world.model.remote.services.ApiServiceWeather
+import com.example.weather_world.model.repositories.news.AuthInterceptor
+import com.example.weather_world.model.repositories.news.Constant
 import com.example.weather_world.model.repositories.weather.Constants.BASE_URL
 import com.example.weather_world.model.repositories.weather.Repository
 import com.example.weather_world.model.repositories.weather.RepositoryImplementation
@@ -15,6 +18,7 @@ import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -23,6 +27,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @Named("WeatherBaseUrl")
     fun provideBaseUrl(): String {
         return BASE_URL
     }
@@ -47,6 +52,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @Named("WeatherClients")
     fun provideClients(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
@@ -55,11 +61,12 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    @Named("Weather")
     fun provideRetrofit(
-        baseUrl: String,
+        @Named("WeatherBaseUrl") baseUrl: String,
         converterFactory: Converter.Factory,
         callAdapter: CallAdapter.Factory,
-        okHttpClient: OkHttpClient
+        @Named("WeatherClients") okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -71,7 +78,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAPIService(retrofit: Retrofit): ApiServiceWeather {
+    fun provideAPIService(@Named("Weather") retrofit: Retrofit): ApiServiceWeather {
         return retrofit.create(ApiServiceWeather::class.java)
     }
 
@@ -79,5 +86,51 @@ object NetworkModule {
     @Provides
     fun provideRepository(apiService: ApiServiceWeather): Repository {
         return RepositoryImplementation(apiService)
+    }
+
+    @Singleton
+    @Provides
+    @Named("NewsBaseUrl")
+    fun provideNewsBaseUrl(): String {
+        return Constant.BASE_URL
+    }
+
+    @Singleton
+    @Provides
+    @Named("NewsClients")
+    fun provideNewsClients(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(AuthInterceptor())
+        return okHttpClient.build()
+    }
+
+    @Singleton
+    @Provides
+    @Named("News")
+    fun provideNewsRetrofit(
+        @Named("WeatherBaseUrl") baseUrl: String,
+        converterFactory: Converter.Factory,
+        callAdapter: CallAdapter.Factory,
+        @Named("NewsClients") okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(converterFactory)
+            .addCallAdapterFactory(callAdapter)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNewsAPIService(@Named("News") retrofit: Retrofit): ApiServiceNews {
+        return retrofit.create(ApiServiceNews::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNewsRepository(apiService: ApiServiceNews): com.example.weather_world.model.repositories.news.Repository {
+        return com.example.weather_world.model.repositories.news.RepositoryImplementation(apiService)
     }
 }

@@ -1,6 +1,8 @@
 package com.example.weather_world.viewModel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.weather_world.model.remote.data.news.NewsResponse
 import com.example.weather_world.model.repositories.news.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -12,14 +14,15 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     private lateinit var compositeDisposable: CompositeDisposable
+    val responseFromApi = MutableLiveData<NewsResponse>()
 
-    fun getAirPollutionInfo(country: String) {
+    fun getNewsAccordingToRegion(country: String) {
         compositeDisposable.add(
             repository.fetchNewsAPI(country)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-
+                    responseFromApi.postValue(it)
                 }, {
                     it.printStackTrace()
                 })
