@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weather_world.model.repositories.weather.Repository
 import com.example.weatherappall.model.remote.data.forecast.ForecastResponse
-import com.example.weatherappall.model.remote.data.forecast.Weather
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+
     var currentAirPollutionData by mutableStateOf<Pollution?>(null)
         private set
     var allAirPollutionData by mutableStateOf<List<Pollution>?>(null)
@@ -30,9 +30,8 @@ class WeatherViewModel @Inject constructor(private val repository: Repository) :
     private val _forecastResponse = MutableLiveData<ForecastResponse>()
     val forecastResponse: LiveData<ForecastResponse> = _forecastResponse
 
-    private val _weatherResponse = MutableLiveData<WeatherResponse>()
-    val weatherResponse: LiveData<WeatherResponse> = _weatherResponse
-
+    private val _weatherInfo = MutableLiveData<WeatherResponse>()
+    val weatherInfo : LiveData<WeatherResponse> = _weatherInfo
 
     fun getWeatherInfo(city: String) {
         compositeDisposable.add(
@@ -40,7 +39,7 @@ class WeatherViewModel @Inject constructor(private val repository: Repository) :
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    _weatherResponse.postValue(it)
+                    _weatherInfo.postValue(it)
                 }, {
                     it.printStackTrace()
                 })
