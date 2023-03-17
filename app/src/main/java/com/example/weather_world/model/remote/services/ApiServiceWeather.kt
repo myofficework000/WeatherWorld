@@ -1,7 +1,7 @@
-package com.example.weather_world.model.remote
+package com.example.weather_world.model.remote.services
 
-import com.example.weather_world.model.remote.Constants.API_KEY
-import com.example.weather_world.model.remote.Constants.UNITS
+import com.example.weather_world.model.repositories.weather.Constants.API_KEY
+import com.example.weather_world.model.repositories.weather.Constants.UNITS
 import com.example.weatherappall.model.remote.data.forecast.ForecastResponse
 import com.example.weatherappall.model.remote.data.pollutionforecast.PollutionForecastResponse
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService {
+interface ApiServiceWeather {
 
     // Alex
     @GET("weather")

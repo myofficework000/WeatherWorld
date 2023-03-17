@@ -1,4 +1,4 @@
-package com.example.weather_world.model.remote
+package com.example.weather_world.model.repositories.weather
 
 object Constants {
     const val BASE_URL = "https://api.openweathermap.org/data/2.5/"

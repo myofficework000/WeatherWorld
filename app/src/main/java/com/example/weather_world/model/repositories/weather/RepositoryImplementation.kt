@@ -1,14 +1,14 @@
-package com.example.weather_world.model.repositories
+package com.example.weather_world.model.repositories.weather
 
 import android.location.Location
-import com.example.weather_world.model.remote.ApiService
+import com.example.weather_world.model.remote.services.ApiServiceWeather
 import com.example.weatherappall.model.remote.data.forecast.ForecastResponse
 import com.example.weatherappall.model.remote.data.pollutionforecast.PollutionForecastResponse
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class RepositoryImplementation @Inject constructor(private val apiService: ApiService) :
+class RepositoryImplementation @Inject constructor(private val apiService: ApiServiceWeather) :
     Repository {
 
     override fun fetchWeatherAPI(city: String): Single<WeatherResponse> {

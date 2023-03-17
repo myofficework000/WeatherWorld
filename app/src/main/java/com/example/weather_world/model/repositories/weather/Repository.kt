@@ -1,4 +1,4 @@
-package com.example.weather_world.model.repositories
+package com.example.weather_world.model.repositories.weather
 
 import android.location.Location
 import com.example.weatherappall.model.remote.data.forecast.ForecastResponse

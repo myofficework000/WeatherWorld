@@ -2,7 +2,7 @@ package com.example.weather_world.viewModel
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
-import com.example.weather_world.model.repositories.Repository
+import com.example.weather_world.model.repositories.weather.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -1,9 +1,9 @@
-package com.example.mvvmcompose.di
+package com.example.weather_world.di
 
-import com.example.weather_world.model.remote.ApiService
-import com.example.weather_world.model.remote.Constants.BASE_URL
-import com.example.weather_world.model.repositories.Repository
-import com.example.weather_world.model.repositories.RepositoryImplementation
+import com.example.weather_world.model.remote.services.ApiServiceWeather
+import com.example.weather_world.model.repositories.weather.Constants.BASE_URL
+import com.example.weather_world.model.repositories.weather.Repository
+import com.example.weather_world.model.repositories.weather.RepositoryImplementation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,13 +71,13 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAPIService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun provideAPIService(retrofit: Retrofit): ApiServiceWeather {
+        return retrofit.create(ApiServiceWeather::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideRepository(apiService: ApiService): Repository {
+    fun provideRepository(apiService: ApiServiceWeather): Repository {
         return RepositoryImplementation(apiService)
     }
 }
