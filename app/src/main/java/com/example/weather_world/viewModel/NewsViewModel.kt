@@ -19,7 +19,7 @@ class NewsViewModel @Inject constructor(private val repository: Repository) : Vi
 
     fun getNewsAccordingToRegion(country: String) {
         compositeDisposable.add(
-            repository.fetchNewsAPI("CN")
+            repository.fetchNewsAPI(country)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
