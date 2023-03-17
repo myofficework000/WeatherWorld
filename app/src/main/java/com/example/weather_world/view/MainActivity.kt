@@ -63,7 +63,11 @@ class MainActivity : ComponentActivity(), LocationListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AirPollution(location = latestLocation)
+                    Column() {
+                        AirPollution(location = latestLocation)
+                        Forecast()
+                    }
+
                 }
             }
         }
