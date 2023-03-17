@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.weather_world.model.remote.data.LocalTemUnit
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
@@ -18,7 +19,7 @@ import kotlin.math.abs
 
 @Composable
 fun Forecast() {
-   // LineChart()
+    //LineChart()
 }
 
 
