@@ -6,11 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +26,6 @@ import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 @Composable
 fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
 
-    val city by remember { mutableStateOf("") }
     val weatherInfo by viewModel.weatherInfo.observeAsState()
 
     Card(

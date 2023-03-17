@@ -1,8 +1,12 @@
 package com.example.weather_world.view
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,18 +18,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.PointMode
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LiveData
 import com.example.weather_world.model.remote.data.LocalTemUnit
-import com.example.weather_world.viewModel.NewsViewModel
 import com.example.weather_world.viewModel.WeatherViewModel
-import com.example.weatherappall.model.remote.data.forecast.ForecastResponse
 import com.example.weatherappall.model.remote.data.forecast.WeatherDetail
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 import kotlin.math.abs
@@ -34,22 +33,30 @@ import kotlin.math.abs
 fun Forecast(viewModel: WeatherViewModel = hiltViewModel()) {
     val response = viewModel.forecastResponse.observeAsState()
     viewModel.getForeCastInfo("Houston")
-    response.value?.let { MakeAListOfGames1(weatherDetails = it.list) }
+    response.value?.let {
+        SetForeCastUI(weatherDetails = it.list)
+    }
 }
 
 @Composable
-fun MakeAListOfGames1(weatherDetails: List<WeatherDetail>) {
-    LazyRow {
+fun SetForeCastUI(weatherDetails: List<WeatherDetail>) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
         items(weatherDetails) { weatherDetail ->
-            forecastCard(weatherDetail)
+            ForecastCard(weatherDetail)
         }
     }
 }
 
 @Composable
-fun forecastCard(weatherDetail: WeatherDetail){
-    Column(modifier = Modifier.fillMaxSize()) {
-
+fun ForecastCard(weatherDetail: WeatherDetail) {
+    Column(
+        modifier = Modifier
+            .height(200.dp)
+            .width(100.dp)
+    ) {
         Card(
             border = null,
             shape = RoundedCornerShape(20.dp),
@@ -64,26 +71,26 @@ fun forecastCard(weatherDetail: WeatherDetail){
         }
 
     }
-        /*Text(
-            day.description,
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+    /*Text(
+        day.description,
+        style = TextStyle(
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold
+        ),
+        modifier = Modifier.align(Alignment.CenterHorizontally)
+    )
 
-        Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(10.dp))
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .height(100.dp)
-        ) {
+    Row(
+        modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .height(100.dp)
+    ) {
 
-            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                *//* Text(
+        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+            *//* Text(
                      "${day.temperatureRange.first.displayName(LocalTemUnit.current)}↑",
                      style = TextStyle(
                          fontSize = 19.sp,
@@ -184,7 +191,8 @@ fun LineChart(
             val points = dailyWeather.weather.mapIndexed { index, hourlyWeather ->
                 Offset(
                     increment * index + increment / 2,
-                    (1 - (hourlyWeather.main.toFloatOrNull()?.minus(min.toFloat()))!! / dy) * (size.height * 0.3f) +
+                    (1 - (hourlyWeather.main.toFloatOrNull()
+                        ?.minus(min.toFloat()))!! / dy) * (size.height * 0.3f) +
                             size.height * 0.2f // reserve space for drawText
                 )
             }

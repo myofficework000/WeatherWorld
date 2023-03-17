@@ -41,12 +41,14 @@ fun NewsCard(viewModel: NewsViewModel = hiltViewModel()) {
                             .padding(10.dp)
 
                     ) {
-                        GlideImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            imageModel = newsItem.image
-                        )
+                        if (newsItem.image.isNotEmpty() || newsItem.image.isNotBlank() || newsItem.image.contains("http")){
+                            GlideImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp),
+                                imageModel = newsItem.image
+                            )
+                        }
                         Text(
                             text = newsItem.title,
                             fontSize = 18.sp,

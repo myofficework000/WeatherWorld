@@ -19,14 +19,11 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +37,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.TemperatureUnit
+import com.example.weather_world.view.ui.theme.Pink80
 import com.example.weather_world.view.ui.theme.WeatherWorldTheme
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.Weather
@@ -60,25 +58,54 @@ class MainActivity : ComponentActivity(), LocationListener {
         getCurrentLocation()
         setContent {
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
+            val cityName = remember { mutableStateOf("") }
 
             LaunchedEffect(latestLocation) {
                 weatherViewModel.getAirPollutionInfo(latestLocation)
-                weatherViewModel.getWeatherInfo("London")
+                if (cityName.value.isNotEmpty()) {
+                    weatherViewModel.getWeatherInfo(cityName.toString())
+                } else {
+                    weatherViewModel.getWeatherInfo("London")
+                }
             }
 
-            WeatherWorldTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(10.dp)
+            )
+            {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Pink80)
+                        .align(Alignment.TopCenter)
                 ) {
-                    Column {
-                        Weather(viewModel = weatherViewModel)
-                        AirPollution(weatherViewModel.currentAirPollutionData)
-                        Forecast()
-                        NewsCard()
 
+                }
+                Column {
+                    SearchUI(city = cityName)
+                    Text(text = "Weather Info")
+                    Weather()
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Pink80)
+                    ) {
+                        Forecast()
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Pink80)
+                    ) {
+                        AirPollution(weatherViewModel.currentAirPollutionData)
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    NewsCard()
                 }
             }
         }

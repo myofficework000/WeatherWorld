@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WeatherWorld</string>
+    <string name="search_city">search your city</string>
+    <string name="city">City</string>
+    <string name="loaction_city">This is location city</string>
 </resources>
