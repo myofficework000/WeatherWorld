@@ -63,6 +63,7 @@ class MainActivity : ComponentActivity(), LocationListener {
 
             LaunchedEffect(latestLocation) {
                 weatherViewModel.getAirPollutionInfo(latestLocation)
+                weatherViewModel.getWeatherInfo("London")
             }
 
             WeatherWorldTheme {
@@ -72,9 +73,11 @@ class MainActivity : ComponentActivity(), LocationListener {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
+                        Weather(viewModel = weatherViewModel)
                         AirPollution(weatherViewModel.currentAirPollutionData)
                         Forecast()
                         NewsCard()
+
                     }
                 }
             }
