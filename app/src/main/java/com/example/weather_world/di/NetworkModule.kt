@@ -109,7 +109,7 @@ object NetworkModule {
     @Provides
     @Named("News")
     fun provideNewsRetrofit(
-        @Named("WeatherBaseUrl") baseUrl: String,
+        @Named("NewsBaseUrl") baseUrl: String,
         converterFactory: Converter.Factory,
         callAdapter: CallAdapter.Factory,
         @Named("NewsClients") okHttpClient: OkHttpClient

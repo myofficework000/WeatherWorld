@@ -71,9 +71,10 @@ class MainActivity : ComponentActivity(), LocationListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Column() {
+                    Column {
                         AirPollution(weatherViewModel.currentAirPollutionData)
                         Forecast()
+                        NewsCard()
                     }
                 }
             }

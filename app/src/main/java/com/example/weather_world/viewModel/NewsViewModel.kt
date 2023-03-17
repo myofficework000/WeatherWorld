@@ -13,12 +13,12 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
-    private lateinit var compositeDisposable: CompositeDisposable
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     val responseFromApi = MutableLiveData<NewsResponse>()
 
     fun getNewsAccordingToRegion(country: String) {
         compositeDisposable.add(
-            repository.fetchNewsAPI(country)
+            repository.fetchNewsAPI("CN")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

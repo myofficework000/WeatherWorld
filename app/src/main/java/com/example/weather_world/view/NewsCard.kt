@@ -2,6 +2,7 @@ package com.example.weather_world.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ fun NewsCard(viewModel: NewsViewModel = hiltViewModel()) {
     Column(Modifier.fillMaxWidth()) {
         response.value?.let {
             //your UI
+            Text(text = response.value!!.status)
 
         }
     }
