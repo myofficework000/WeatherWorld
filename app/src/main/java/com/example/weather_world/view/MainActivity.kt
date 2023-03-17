@@ -23,6 +23,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -43,6 +46,7 @@ import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.Weather
 import dagger.hilt.android.AndroidEntryPoint
 
+@ExperimentalMaterial3Api
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
