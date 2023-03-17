@@ -5,10 +5,12 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -16,15 +18,12 @@ import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LiveData
 import com.example.weather_world.model.remote.data.LocalTemUnit
+import com.example.weather_world.viewModel.NewsViewModel
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.ForecastResponse
 import com.example.weatherappall.model.remote.data.forecast.WeatherDetail
@@ -34,9 +33,9 @@ import kotlin.math.abs
 @Composable
 fun Forecast(viewModel: WeatherViewModel = hiltViewModel()) {
     val response = viewModel.forecastResponse.observeAsState()
+    viewModel.getForeCastInfo("Houston")
     response.value?.let { MakeAListOfGames1(weatherDetails = it.list) }
 }
-
 
 @Composable
 fun MakeAListOfGames1(weatherDetails: List<WeatherDetail>) {
@@ -50,9 +49,20 @@ fun MakeAListOfGames1(weatherDetails: List<WeatherDetail>) {
 @Composable
 fun forecastCard(weatherDetail: WeatherDetail){
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            weatherDetail.main.toString()
-        )
+
+        Card(
+            border = null,
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 20.dp
+            )
+
+        ) {
+            Text(
+                weatherDetail.main.temp.toString()
+            )
+        }
+
     }
         /*Text(
             day.description,
