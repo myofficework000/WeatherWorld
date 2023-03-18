@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.LocalTemUnit
 import com.example.weather_world.model.remote.data.weather.Weather
+import com.example.weather_world.view.ui.theme.BackgroundBlue
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 
@@ -28,57 +29,59 @@ fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
 
     val weatherInfo by viewModel.weatherInfo.observeAsState()
 
+
     Card(
         modifier = Modifier
-            .background(color = Color.Cyan)
             .fillMaxWidth()
             .padding(15.dp)
             .clickable{ },
     ){
         Column(
-            modifier = Modifier.padding(15.dp),
+            Modifier.background(color = BackgroundBlue)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
             weatherInfo?.let {
                 Text(
                     text = it.name,
                     color = Color.White,
-                    fontSize = 60.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Normal,
+                    fontSize = 40.sp,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center
 
                 )
             }
-            Spacer(modifier = Modifier.height(10.dp))
             weatherInfo?.let {
                 Text(
-                    text = it.main.temp.toInt().toString() + "°C",
-                    fontSize = 70.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Normal,
+                    text = it.main.temp.toInt().toString() + "°",
+                    fontSize = 80.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Thin,
                     textAlign = TextAlign.Center,
                 )
             }
-            Spacer(modifier = Modifier.height(10.dp))
             weatherInfo?.let {
                 Text(
-                    text = it.clouds.toString().trim(),
+                    text = it.weather[0].description,
                     fontSize = 20.sp,
-                    fontFamily = FontFamily.Monospace,
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                 )
             }
-            Spacer(modifier = Modifier.height(10.dp))
             weatherInfo?.let {
                 Text(
                     text = "H:${it.main.temp_max.toInt()}° L:${it.main.temp_min.toInt()}°",
                     fontSize = 20.sp,
+                    color = Color.White,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                 )
             }
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
@@ -189,7 +192,6 @@ fun WeatherInfoPager(
                     modifier = Modifier.offset(0.dp,(-5).dp * animateTween)
                 )
                 /*
-
                 Text(
                     day.temperature().displayName(LocalTemUnit.current),
                     style = TextStyle(
