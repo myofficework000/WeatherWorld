@@ -1,9 +1,11 @@
 package com.example.weather_world.di
 
+import com.example.weather_world.model.remote.services.ApiGeo
 import com.example.weather_world.model.remote.services.ApiServiceNews
 import com.example.weather_world.model.remote.services.ApiServiceWeather
 import com.example.weather_world.model.repositories.news.AuthInterceptor
 import com.example.weather_world.model.repositories.news.Constant
+import com.example.weather_world.model.repositories.weather.Constants
 import com.example.weather_world.model.repositories.weather.Constants.BASE_URL
 import com.example.weather_world.model.repositories.weather.Repository
 import com.example.weather_world.model.repositories.weather.RepositoryImplementation
@@ -78,14 +80,31 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun provideApiGeo(
+        converterFactory: Converter.Factory,
+        callAdapter: CallAdapter.Factory,
+        @Named("WeatherClients") okHttpClient: OkHttpClient
+    ): ApiGeo = Retrofit.Builder()
+        .baseUrl(Constants.GEO_BASE_URL)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(callAdapter)
+        .client(okHttpClient)
+        .build()
+        .create(ApiGeo::class.java)
+
+    @Singleton
+    @Provides
     fun provideAPIService(@Named("Weather") retrofit: Retrofit): ApiServiceWeather {
         return retrofit.create(ApiServiceWeather::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideRepository(apiService: ApiServiceWeather): Repository {
-        return RepositoryImplementation(apiService)
+    fun provideRepository(
+        apiService: ApiServiceWeather,
+        apiGeo: ApiGeo
+    ): Repository {
+        return RepositoryImplementation(apiService, apiGeo)
     }
 
     @Singleton

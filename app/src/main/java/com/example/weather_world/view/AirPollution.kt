@@ -22,7 +22,8 @@ import com.example.weatherappall.model.remote.data.pollutionforecast.Pollution
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AirPollution(
-    data: Pollution?
+    data: Pollution?,
+    cityName: String
 ) {
     var aqiFraction by remember{ mutableStateOf(5f) }
     val aqiAnimated by animateFloatAsState(
@@ -66,7 +67,7 @@ fun AirPollution(
                 }
             )
         }
-        Text("Air quality for xxx")
+        Text("Air quality for $cityName")
     }
 }
 
@@ -91,6 +92,7 @@ private fun AirPollutionPreview() {
             Components(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0),
             0,
             Main(3)
-        )
+        ),
+        "London"
     )
 }

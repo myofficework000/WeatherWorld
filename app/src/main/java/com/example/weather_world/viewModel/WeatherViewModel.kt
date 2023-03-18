@@ -10,6 +10,7 @@ import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.example.weather_world.model.remote.data.city.CityResponse
 import com.example.weatherappall.model.remote.data.pollutionforecast.Pollution
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -25,6 +26,8 @@ class WeatherViewModel @Inject constructor(private val repository: Repository) :
     var currentAirPollutionData by mutableStateOf<Pollution?>(null)
         private set
     var allAirPollutionData by mutableStateOf<List<Pollution>?>(null)
+        private set
+    var currentCoordData by mutableStateOf<List<CityResponse>?>(null)
         private set
 
     private val _forecastResponse = MutableLiveData<ForecastResponse>()
@@ -69,6 +72,19 @@ class WeatherViewModel @Inject constructor(private val repository: Repository) :
                     currentAirPollutionData = allAirPollutionData?.let {
                         it.maxBy { pData -> pData.dt }
                     }
+                }, {
+                    it.printStackTrace()
+                })
+        )
+    }
+
+    fun getCoordsByCity(cityName: String) {
+        compositeDisposable.add(
+            repository.fetchCoordByCity(cityName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    currentCoordData = it
                 }, {
                     it.printStackTrace()
                 })

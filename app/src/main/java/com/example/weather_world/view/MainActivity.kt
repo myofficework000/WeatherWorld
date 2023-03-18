@@ -62,14 +62,28 @@ class MainActivity : ComponentActivity(), LocationListener {
         getCurrentLocation()
         setContent {
             val weatherViewModel = hiltViewModel<WeatherViewModel>()
-            val cityName = remember { mutableStateOf("") }
+            val currentCity = remember(weatherViewModel.currentCoordData) {
+                weatherViewModel.currentCoordData?.firstOrNull()?.name ?: ""
+            }
+            val cityName = remember{ mutableStateOf("") }
 
             LaunchedEffect(latestLocation) {
                 weatherViewModel.getAirPollutionInfo(latestLocation)
-                if (cityName.value.isNotEmpty()) {
-                    weatherViewModel.getWeatherInfo(cityName.toString())
+                if (weatherViewModel.currentCoordData == null) {
+                    weatherViewModel.getWeatherInfo(currentCity)
                 } else {
                     weatherViewModel.getWeatherInfo("London")
+                }
+            }
+
+            LaunchedEffect(weatherViewModel.currentCoordData) {
+                weatherViewModel.currentCoordData?.firstOrNull()?.apply {
+                    weatherViewModel.getAirPollutionInfo(getLocation())
+                    if (weatherViewModel.currentCoordData == null) {
+                        weatherViewModel.getWeatherInfo(currentCity)
+                    } else {
+                        weatherViewModel.getWeatherInfo("London")
+                    }
                 }
             }
 
@@ -89,7 +103,7 @@ class MainActivity : ComponentActivity(), LocationListener {
 
                 }
                 Column {
-                    SearchUI(city = cityName)
+                    SearchUI(city = cityName, weatherViewModel::getCoordsByCity)
                     Text(text = "Weather Info")
                     Weather()
                     Spacer(modifier = Modifier.height(10.dp))
@@ -106,7 +120,10 @@ class MainActivity : ComponentActivity(), LocationListener {
                             .fillMaxWidth()
                             .background(color = Pink80)
                     ) {
-                        AirPollution(weatherViewModel.currentAirPollutionData)
+                        AirPollution(
+                            weatherViewModel.currentAirPollutionData,
+                            currentCity
+                        )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     NewsCard()

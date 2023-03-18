@@ -16,10 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.weather_world.R
 import com.example.weather_world.view.ui.theme.Pink80
+import kotlin.reflect.KFunction1
 
 @Composable
 fun SearchUI(
-    city: MutableState<String>
+    city: MutableState<String>,
+    searchCityFunc: KFunction1<String, Unit>
 ) {
     OutlinedTextField(
         value = city.value,
@@ -36,7 +38,9 @@ fun SearchUI(
             )
         },
         trailingIcon = {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                searchCityFunc(city.value)
+            }) {
                 Icon(
                     imageVector = Icons.Default.Search, contentDescription = stringResource(
                         id = R.string.loaction_city
