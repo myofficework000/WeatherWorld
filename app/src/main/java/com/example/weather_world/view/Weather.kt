@@ -51,16 +51,33 @@ fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
 
                 )
             }
-            weatherInfo?.let {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                weatherInfo?.let {
+                    Text(
+                        text = it.main.temp.toInt().toString() + "°",
+                        fontSize = 80.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.Thin,
+                        textAlign = TextAlign.Start,
+                    )
+                }
                 Text(
-                    text = it.main.temp.toInt().toString() + "°",
-                    fontSize = 80.sp,
+                    text = "C",
+                    fontSize = 30.sp,
                     color = Color.White,
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Thin,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.End
                 )
             }
+
+
             weatherInfo?.let {
                 Text(
                     text = it.weather[0].description,
@@ -71,6 +88,19 @@ fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
                     textAlign = TextAlign.Center,
                 )
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            weatherInfo?.let {
+                Text(
+                    text = "Feels Like : ${it.main.feels_like.toInt()}°C",
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center
+
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
             weatherInfo?.let {
                 Text(
                     text = "H:${it.main.temp_max.toInt()}° L:${it.main.temp_min.toInt()}°",
