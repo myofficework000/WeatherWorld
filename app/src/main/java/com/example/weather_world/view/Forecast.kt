@@ -3,10 +3,7 @@ package com.example.weather_world.view
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,19 +12,29 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.LocalTemUnit
+import com.example.weather_world.model.repositories.weather.Constants.IMG_URL
+import com.example.weather_world.model.repositories.weather.Constants.TEMP_CONVERT2
+import com.example.weather_world.model.repositories.weather.Constants.TEMP_CONVERTER1
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.WeatherDetail
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
+import com.skydoves.landscapist.glide.GlideImage
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun Forecast(viewModel: WeatherViewModel = hiltViewModel()) {
@@ -37,12 +44,13 @@ fun Forecast(viewModel: WeatherViewModel = hiltViewModel()) {
         SetForeCastUI(weatherDetails = it.list)
     }
 }
-
 @Composable
 fun SetForeCastUI(weatherDetails: List<WeatherDetail>) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(weatherDetails) { weatherDetail ->
             ForecastCard(weatherDetail)
@@ -52,94 +60,55 @@ fun SetForeCastUI(weatherDetails: List<WeatherDetail>) {
 
 @Composable
 fun ForecastCard(weatherDetail: WeatherDetail) {
-    Column(
-        modifier = Modifier
-            .height(200.dp)
-            .width(100.dp)
-    ) {
-        Card(
-            border = null,
-            shape = RoundedCornerShape(20.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 20.dp
-            )
+    fun tempConverter(temp: Double): Int{
+        return(temp * TEMP_CONVERTER1 + TEMP_CONVERT2).roundToInt()
+    }
+    val mainTemp = tempConverter(weatherDetail.main.temp)
+    val minTemp = tempConverter(weatherDetail.main.temp_min)
+    val maxTemp = tempConverter(weatherDetail.main.temp_max)
 
-        ) {
+    val date = Date(weatherDetail.dt * 1000L)
+    val format = SimpleDateFormat("d a")
+    val day = format.format(date)
+
+    Card(
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(100.dp),
+        border = null,
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 20.dp
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
             Text(
-                weatherDetail.main.temp.toString()
+                day,
+                fontSize = 15.sp,
+            )
+            GlideImage(
+                imageModel = "${IMG_URL}/${weatherDetail.weather[0].icon}.png",
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp))
+            Text(
+                text = "$mainTemp °F",
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "$minTemp/$maxTemp °F",
+                fontWeight = FontWeight.Bold
             )
         }
-
     }
-    /*Text(
-        day.description,
-        style = TextStyle(
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold
-        ),
-        modifier = Modifier.align(Alignment.CenterHorizontally)
-    )
-
-    Spacer(modifier = Modifier.height(10.dp))
-
-    Row(
-        modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .height(100.dp)
-    ) {
-
-        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-            *//* Text(
-                     "${day.temperatureRange.first.displayName(LocalTemUnit.current)}↑",
-                     style = TextStyle(
-                         fontSize = 19.sp,
-                         fontFamily = FontFamily.Monospace,
-                         fontWeight = FontWeight.Normal,
-                     ),
-                     modifier = Modifier.align(Alignment.End)
-                 )*//*
-                Spacer(modifier = Modifier.height(3.dp))
-                *//*Text(
-                    "${day.temperatureRange.second.displayName(LocalTemUnit.current)}↓",
-                    style = TextStyle(
-                        fontSize = 19.sp,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Normal,
-                    ),
-                    modifier = Modifier.align(Alignment.End)
-                )*//*
-            }
-
-            val animateTween by rememberInfiniteTransition().animateFloat(
-                initialValue = -1f,
-                targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    tween(2000, easing = LinearEasing),
-                    RepeatMode.Reverse
-                )
-            )*//*
-
-                Text(
-                    day.temperature().displayName(LocalTemUnit.current),
-                    style = TextStyle(
-                        fontSize = 70.sp,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.SemiBold
-                    ),
-                    letterSpacing = 0.sp,
-                    modifier = Modifier.offset(0.dp, (-5).dp * animateTween)
-                )*//*
-            Text(
-                LocalTemUnit.current.text,
-                style = TextStyle(
-                    fontSize = 30.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.SemiBold
-                ),
-                modifier = Modifier.padding(top = 10.dp)
-            )*/
 }
+
 /**
  * Render hourly temperature with curve-line chart
  * show with animation

@@ -8,6 +8,9 @@ object Constants {
     const val GEO_BASE_URL = "https://api.openweathermap.org/geo/1.0/"
     const val API_KEY = "3f9bb0b98f7d19d210e8fb480fc1a8a2"
     const val UNITS = "metric"
+    const val IMG_URL = "https://openweathermap.org/img/wn"
+    const val TEMP_CONVERTER1 = 1.8
+    const val TEMP_CONVERT2 = 32
 
     val airQualityBarGradient = Brush.horizontalGradient(
         listOf(
