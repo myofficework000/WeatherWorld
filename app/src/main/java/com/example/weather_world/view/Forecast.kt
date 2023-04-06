@@ -68,7 +68,7 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
     val maxTemp = tempConverter(weatherDetail.main.temp_max)
 
     val date = Date(weatherDetail.dt * 1000L)
-    val timeFormat = SimpleDateFormat("d a")
+    val timeFormat = SimpleDateFormat("h a")
     val time = timeFormat.format(date)
 
     val dayFormat = SimpleDateFormat("E")
