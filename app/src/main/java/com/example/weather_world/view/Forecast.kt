@@ -68,8 +68,12 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
     val maxTemp = tempConverter(weatherDetail.main.temp_max)
 
     val date = Date(weatherDetail.dt * 1000L)
-    val format = SimpleDateFormat("d a")
-    val day = format.format(date)
+    val timeFormat = SimpleDateFormat("d a")
+    val time = timeFormat.format(date)
+
+    val dayFormat = SimpleDateFormat("E")
+    val day = dayFormat.format(date)
+
 
     Card(
         modifier = Modifier
@@ -91,6 +95,11 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
             Text(
                 day,
                 fontSize = 15.sp,
+            )
+            Text(
+                time,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold
             )
             GlideImage(
                 imageModel = "${IMG_URL}/${weatherDetail.weather[0].icon}.png",
