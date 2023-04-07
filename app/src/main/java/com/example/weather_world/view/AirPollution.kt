@@ -12,9 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.weather_world.model.repositories.weather.Constants
+import com.example.weather_world.view.ui.theme.cardDayColor
 import com.example.weatherappall.model.remote.data.pollutionforecast.Components
 import com.example.weatherappall.model.remote.data.pollutionforecast.Main
 import com.example.weatherappall.model.remote.data.pollutionforecast.Pollution
@@ -34,41 +36,61 @@ fun AirPollution(
         aqiFraction = aqiToFraction(data?.main?.aqi ?: 1)
     }
 
-    Column(
-        Modifier.padding(horizontal = 16.dp)
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+
     ){
-        Box(Modifier.fillMaxWidth()) {
-            Text("Air Pollution", Modifier.align(Alignment.CenterStart))
-            Text("DAQI(GB)", Modifier.align(Alignment.CenterEnd))
-        }
-        Text(aqiToText(data?.main?.aqi ?: 0))
-        Box(
-            Modifier
+        Column(
+            modifier = Modifier
                 .fillMaxWidth()
-                .height(20.dp)
-                .background(
-                    Constants.airQualityBarGradient,
-                    RoundedCornerShape(20.dp)
-                )
-        ) {
-            Slider(
-                value = aqiAnimated,
-                onValueChange = {},
-                modifier = Modifier.fillMaxSize().align(Alignment.Center),
-                enabled = false,
-                track = {
-                    SliderDefaults.Track(
-                        it,
-                        colors = SliderDefaults.colors(
-                            activeTrackColor = Color.Transparent,
-                            inactiveTrackColor = Color.Transparent
-                        )
+                .background(color = cardDayColor)
+        ){
+            Box(Modifier.fillMaxWidth().padding(10.dp)) {
+                Text("Air Pollution", Modifier.align(Alignment.CenterStart),fontWeight = FontWeight.Bold,
+                    color = Color.White)
+                Text("DAQI(GB)", Modifier.align(Alignment.CenterEnd),fontWeight = FontWeight.Bold,
+                    color = Color.White)
+            }
+            Text(aqiToText(data?.main?.aqi ?: 0),fontWeight = FontWeight.Bold,
+                color = Color.White)
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(20.dp)
+                    .background(
+                        Constants.airQualityBarGradient,
+                        RoundedCornerShape(20.dp)
                     )
-                }
+            ) {
+                Slider(
+                    value = aqiAnimated,
+                    onValueChange = {},
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .padding(10.dp),
+                    enabled = false,
+                    track = {
+                        SliderDefaults.Track(
+                            it,
+                            colors = SliderDefaults.colors(
+                                activeTrackColor = Color.Transparent,
+                                inactiveTrackColor = Color.Transparent
+                            )
+                        )
+                    }
+                )
+            }
+            Text(
+                modifier = Modifier.padding(10.dp),
+                text = "Air quality for $cityName",
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
-        Text("Air quality for $cityName")
     }
+
 }
 
 private fun aqiToText(aqi: Int) = "$aqi - ${

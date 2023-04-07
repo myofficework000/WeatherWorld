@@ -21,6 +21,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,17 +35,23 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.TemperatureUnit
+import com.example.weather_world.utils.GreetingMessageUtil
 import com.example.weather_world.view.ui.theme.Pink80
 import com.example.weather_world.view.ui.theme.WeatherWorldTheme
+import com.example.weather_world.view.ui.theme.cardDayColor
+import com.example.weather_world.view.ui.theme.dayColor
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.Weather
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @ExperimentalMaterial3Api
 @AndroidEntryPoint
@@ -86,51 +93,62 @@ class MainActivity : ComponentActivity(), LocationListener {
                     }
                 }
             }
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(10.dp)
+                    .background(color = dayColor)
             )
             {
-                Box(
+                Column (
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Pink80)
-                        .align(Alignment.TopCenter)
-                ) {
-
-                }
-                Column {
+                        .fillMaxHeight()
+                        .padding(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                        ){
                     SearchUI(city = cityName, weatherViewModel::getCoordsByCity)
-                    Text(text = "Weather Info")
-                    Weather()
-                    Spacer(modifier = Modifier.height(10.dp))
+                    greetingMessage()
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(color = Pink80)
+                    ){
+                        Weather()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, bottom = 10.dp)
                     ) {
                         Forecast()
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(color = Pink80)
+                            .background(color = Color.Transparent)
                     ) {
                         AirPollution(
                             weatherViewModel.currentAirPollutionData,
                             currentCity
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
                     NewsCard()
                 }
             }
         }
     }
+    @Composable
+    private fun greetingMessage() {
+        val message = GreetingMessageUtil.greetMessage()
+
+        Text(
+            text = message,
+            fontSize = 20.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
+    }
+
 
     private fun getCurrentLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

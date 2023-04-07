@@ -3,6 +3,7 @@ package com.example.weather_world.view
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ import com.example.weather_world.model.remote.data.LocalTemUnit
 import com.example.weather_world.model.repositories.weather.Constants.IMG_URL
 import com.example.weather_world.model.repositories.weather.Constants.TEMP_CONVERT2
 import com.example.weather_world.model.repositories.weather.Constants.TEMP_CONVERTER1
+import com.example.weather_world.view.ui.theme.cardDayColor
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.forecast.WeatherDetail
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
@@ -48,8 +50,7 @@ fun Forecast(viewModel: WeatherViewModel = hiltViewModel()) {
 fun SetForeCastUI(weatherDetails: List<WeatherDetail>) {
     LazyRow(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(weatherDetails) { weatherDetail ->
@@ -70,10 +71,8 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
     val date = Date(weatherDetail.dt * 1000L)
     val timeFormat = SimpleDateFormat("h a")
     val time = timeFormat.format(date)
-
     val dayFormat = SimpleDateFormat("E")
     val day = dayFormat.format(date)
-
 
     Card(
         modifier = Modifier
@@ -89,17 +88,19 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .padding(10.dp),
+                .background(color = cardDayColor),
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
             Text(
                 day,
                 fontSize = 15.sp,
+                color = Color.White
             )
             Text(
                 time,
                 fontSize = 15.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
             GlideImage(
                 imageModel = "${IMG_URL}/${weatherDetail.weather[0].icon}.png",
@@ -108,11 +109,13 @@ fun ForecastCard(weatherDetail: WeatherDetail) {
                     .width(50.dp))
             Text(
                 text = "$mainTemp °F",
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
             Text(
                 text = "$minTemp/$maxTemp °F",
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
     }

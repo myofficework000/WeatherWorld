@@ -21,24 +21,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.model.remote.data.LocalTemUnit
 import com.example.weather_world.model.remote.data.weather.Weather
 import com.example.weather_world.view.ui.theme.BackgroundBlue
+import com.example.weather_world.view.ui.theme.cardDayColor
+import com.example.weather_world.view.ui.theme.dayColor
+import com.example.weather_world.view.ui.theme.transparent
 import com.example.weather_world.viewModel.WeatherViewModel
 import com.example.weatherappall.model.remote.data.weather.WeatherResponse
 
 @Composable
 fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
-
     val weatherInfo by viewModel.weatherInfo.observeAsState()
-
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
-            .clickable{ },
     ){
         Column(
-            Modifier.background(color = BackgroundBlue)
-                .fillMaxWidth(),
+            Modifier
+                .fillMaxWidth()
+                .background(color = cardDayColor),
             horizontalAlignment = Alignment.CenterHorizontally) {
             weatherInfo?.let {
                 Text(
@@ -48,7 +48,6 @@ fun Weather(viewModel: WeatherViewModel = hiltViewModel()) {
                     fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.Center
-
                 )
             }
             Row(

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weather_world.R
 import com.example.weather_world.model.remote.data.news.News
+import com.example.weather_world.view.ui.theme.transparent
 import com.example.weather_world.viewModel.NewsViewModel
 import com.skydoves.landscapist.glide.GlideImage
 @ExperimentalMaterial3Api
@@ -31,7 +32,6 @@ fun NewsCard(viewModel: NewsViewModel = hiltViewModel()) {
     Column(
        modifier = Modifier
            .fillMaxWidth()
-           .background(color = Color.Cyan)
     ) {
         response.value?.let {
             LazyRow {
@@ -53,7 +53,6 @@ fun DrawNewsItem(item: News) {
             .fillMaxHeight()
             .wrapContentHeight()
             .padding(10.dp)
-
     ) {
         GlideImage(
             modifier = Modifier

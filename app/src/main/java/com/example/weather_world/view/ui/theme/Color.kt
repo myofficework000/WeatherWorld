@@ -11,3 +11,9 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val BackgroundBlue = Color(0xFF2196F3)
+
+val dayColor = Color(0xFF748CF1)
+val nightColor = Color(0xFF3E3B51)
+val cardDayColor = Color(0xFF6C64FB)
+val cardNightColor = Color(0x24142C)
+val transparent = Color(0xFFFFFF)
